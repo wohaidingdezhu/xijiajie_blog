@@ -18,4 +18,4 @@ git push -f git@github.com:wohaidingdezhu/wohaidingdezhu.github.io.git master
 
 cd ..
 
-tcb hosting:deploy public -e blog-9g8lgnuke4603ff9
+
