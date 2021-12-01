@@ -24,10 +24,10 @@ module.exports = {
   "theme": "reco",
   "themeConfig": {
     "mode": 'light',
-    "subSidebar": 'auto',
+    "subSidebar": 'auto',   
     "valineConfig": {
-      "appId": 'aCSipIDPBNQTreNNNr4bT5R4-gzGzoHsz',
-      "appKey": 'zuQELzuRINaCxHgIozNrnwKO',
+      "appId": 'HxWlXAgXuT2DxjnOcvgmU0Mk-gzGzoHsz',
+      "appKey": 'XJlaWj8YESnQzxHsrBW5hpew',
     },
     "nav": [
       {

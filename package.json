@@ -1,14 +1,14 @@
 {
   "name": "my_blog",
   "version": "1.0.0",
-  "author": "wb",
+  "author": "xijiajie",
   "scripts": {
     "dev": "vuepress dev . --host \"localhost\"",
     "build": "vuepress build .",
     "deploy": "bash deploy.sh"
   },
   "devDependencies": {
-    "vuepress": "^1.5.4",
+    "vuepress": "1.5.4",
     "vuepress-plugin-meting": "^0.1.1",
     "vuepress-theme-reco": "1.5.7"
   },
