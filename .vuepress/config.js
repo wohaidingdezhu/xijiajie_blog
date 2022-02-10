@@ -88,7 +88,7 @@ module.exports = {
     author: "xijiajie",
     authorAvatar: "/avatar.jpg",
     record: "首页",
-    startYear: "2020",
+    startYear: "2021",
   },
   markdown: {
     lineNumbers: true,
