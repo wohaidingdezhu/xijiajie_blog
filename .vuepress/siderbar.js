@@ -21,6 +21,6 @@ module.exports = {
   ],
   [WEBPACK_PATH]: [createSideBarConfig("webpack相关", WEBPACK_PATH)],
   [GIT_PATH]: [createSideBarConfig("Git使用", GIT_PATH + "/git-base")],
-  [OTHERS_PATH]: [createSideBarConfig("Others", OTHERS_PATH)],
+  [OTHERS_PATH]: [createSideBarConfig("Others", OTHERS_PATH + "/docker")],
   [NODE_PATH]: [createSideBarConfig("Node", NODE_PATH + "/express")],
 };
