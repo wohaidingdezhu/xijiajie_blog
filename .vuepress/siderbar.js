@@ -23,4 +23,5 @@ module.exports = {
   [GIT_PATH]: [createSideBarConfig("Git使用", GIT_PATH + "/git-base")],
   [OTHERS_PATH]: [createSideBarConfig("Others", OTHERS_PATH + "/docker")],
   [NODE_PATH]: [createSideBarConfig("Node", NODE_PATH + "/express")],
+  [NODE_PATH]: [createSideBarConfig("Node", NODE_PATH + "/nodemon")],
 };
