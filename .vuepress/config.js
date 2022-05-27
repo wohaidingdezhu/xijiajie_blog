@@ -1,10 +1,30 @@
 const sidebar = require("./siderbar.js");
+const otherPlugins =require('./otherPlugins');
 module.exports = {
   title: "xijiajie博客",
   description: "xijiajie的博客",
   dest: "public",
   base: "/",
+  port: "9999",
   head: [
+    // [
+    //   'link', { href: "https://cdn.jsdelivr.net/npm/@docsearch/css@3", rel: "stylesheet" }
+    // ],
+    // [
+    //   'script', { src: "https://cdn.jsdelivr.net/npm/@docsearch/js@3" }
+    // ],
+    // [
+    //   'link', { href: "https://cdn.jsdelivr.net/npm/docsearch.js@2/dist/cdn/docsearch.min.css", rel: "stylesheet" }
+    // ],
+    // [
+    //   'script', { src: "https://cdn.jsdelivr.net/npm/docsearch.js@2/dist/cdn/docsearch.min.js" }
+    // ],
+    // [
+    //   'link', { href: "https://cdn.jsdelivr.net/npm/@docsearch/css@alpha", rel: "stylesheet" }
+    // ],
+    // [
+    //   'script', { src: "https://cdn.jsdelivr.net/npm/@docsearch/js@alpha" }
+    // ],
     [
       "link",
       {
@@ -20,47 +40,21 @@ module.exports = {
       },
     ],
   ],
-  plugins: [
-    "@vuepress-reco/vuepress-plugin-comments",
-    "vuepress-plugin-meting",
-    [
-      "vuepress-plugin-nuggets-style-copy",
-      {
-        copyText: "复制代码",
-        tip: {
-          content: "复制成功",
-        },
-      },
-    ],
-    [
-      "@vuepress-reco/vuepress-plugin-bgm-player",
-      {
-        audios: [
-          {
-            name: "LOSER",
-            artist: "米津玄師",
-            url: "https://www.ytmp3.cn/down/73654.mp3",
-            cover:
-              "https://p1.music.126.net/qTSIZ27qiFvRoKj-P30BiA==/109951165895951287.jpg?param=200y200",
-          },
-        ],
-        // 是否默认缩小
-        autoShrink: true,
-        // 缩小时缩为哪种模式
-        shrinkMode: "float",
-        // 悬浮窗样式
-        floatStyle: { bottom: "10px", "z-index": "999999" },
-      },
-    ],
-  ],
+  plugins: otherPlugins,
   theme: "reco",
   themeConfig: {
-    mode: "light",
+    mode: "dark", // 默认 auto，auto 跟随系统，dark 暗色模式，light 亮色模式
+    modePicker: true, // 默认 true，false 不显示模式调节按钮，true 则显示
     subSidebar: "auto",
     valineConfig: {
       appId: "HxWlXAgXuT2DxjnOcvgmU0Mk-gzGzoHsz",
       appKey: "XJlaWj8YESnQzxHsrBW5hpew",
     },
+    // algolia: {
+    //   apiKey: '8503c7f43d77bbe7469b76b8446c3793',
+    //   indexName: 'xijiajie_blog',
+    //   appId: 'HAS88E9R58',
+    // },
     nav: [
       {
         text: "主页",
@@ -78,16 +72,10 @@ module.exports = {
         icon: "reco-suggestion",
       },
       {
-        text: "Contact",
-        icon: "reco-message",
-        items: [
-          {
-            text: "GitHub",
-            link: "https://github.com/wohaidingdezhu",
-            icon: "reco-github",
-          },
-        ],
-      },
+        text: "GitHub",
+        link: "https://github.com/wohaidingdezhu",
+        icon: "reco-github",
+      }
     ],
     sidebar,
     type: "blog",
