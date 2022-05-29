@@ -1,7 +1,7 @@
 ---
 home: true
-heroText: xijiajie博客
-tagline: The end is always near
+heroText: null
+tagline: null
 heroImageStyle:
   {
     maxWidth: "600px",
@@ -11,9 +11,11 @@ heroImageStyle:
     background: "#fff",
     borderRadius: "1rem",
   }
-bgImage: bg1.jpg
+# bgImage: bg1.jpg
+bgImage: null
 bgImageStyle: {}
 # height: '30vh'
+
 isShowTitleInHome: false
 features:
   - title: Yesterday
@@ -23,6 +25,8 @@ features:
   - title: Tomorrow
     details: 明天还得写博客
 ---
+
+<MyTemplate></MyTemplate>
 
 #### 项目简介
 
@@ -78,14 +82,15 @@ body{
 <script>
 export default {
   mounted () {
+    const heros = document.getElementById("heros");
+    console.log(heros,'heros');
+    heros&&this.insertEle(heros,'home-blog');
     const ifJanchor = document.getElementById("JanchorDown"); 
     ifJanchor && ifJanchor.parentNode.removeChild(ifJanchor);
-    let a = document.createElement('a');
-    a.id = 'JanchorDown';
-    a.className = 'anchor-down';
-    document.getElementsByClassName('hero')[0].append(a);
-    let targetA = document.getElementById("JanchorDown");
-    targetA.addEventListener('click', e => { // 添加点击事件
+    const aDown = this.createEle('a',null,'JanchorDown','anchor-down');
+    this.insertEle(aDown,'hero');
+    // let targetA = document.getElementById("JanchorDown");
+    aDown.addEventListener('click', e => { // 添加点击事件
       this.scrollFn();
     })
   },
@@ -94,6 +99,17 @@ export default {
     scrollFn() {
       const windowH = document.getElementsByClassName('hero')[0].clientHeight; // 获取窗口高度
       document.documentElement.scrollTop = windowH; // 滚动条滚动到指定位置
+    },
+    createEle(type,style,id,className){
+      const elem=document.createElement(type);
+      // 将style对象的所有属性复制到elem.style对象上，IE8以上
+      Object.assign(elem.style,style);
+      elem.id = id;
+      elem.className = className;
+      return elem;
+    },
+    insertEle(ele,into){
+     return document.getElementsByClassName(`${into}`)[0].append(ele);
     }
   }
 }
