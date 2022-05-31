@@ -1,55 +1,31 @@
 
- <template>
-  <div id="heros" :style="{ 'background-image': `url(${bgImagePath})` }">
+<template>
+  <div class="buttonId">
+    <button class="img-prev">
+      <i class="iconfont iconsystem-line-arrowleft"></i>
+    </button>
+    <button class="img-next">
+      <i class="iconfont iconsystem-line-right"></i>
+    </button>
   </div>
 </template>
  <script>
-import { homeHeaderImages } from "./../util";
 export default {
   components: {},
   data() {
-    return {
-      currentPage: 1,
-      tags: [],
-      bgImageID: 0,
-      bgImagePath: "",
-      headerOpacity: 1,
-    };
+    return {};
   },
   mounted() {
     // header image
-    const heros = document.querySelector('#heros');
-    this.insertEle(heros);
-    homeHeaderImages &&
-      (this.bgImageID = Math.floor(
-        Math.random() * homeHeaderImages.local.length
-      ));
-     this.setImagePathByID();  
-     console.log('[  this.bgImagePath  ] >',  this.bgImagePath )
-     this.setHeroBgc();
+    // const buttonId = document.querySelector(".buttonId");
+    // console.log("[ buttonId] >", buttonId);
+    // this.insertEle(buttonId);
   },
   methods: {
-    setImagePathByID() {
-      this.bgImagePath = this.$withBase(
-       homeHeaderImages.local[this.bgImageID].path
-      );
+    insertEle(ele) {
+      return document.getElementsByClassName("hero")[0].append(ele);
     },
-     insertEle(ele){
-     return document.getElementsByClassName('home-blog')[0].append(ele);
-    },
-    setHeroBgc(){
-     const hero = document.getElementsByClassName('hero')[0];
-     hero.style.backgroundImage = `url(${this.bgImagePath})`;
-    //  hero.style=`background-image:${this.bgImagePath}`
-     console.log('[ hero 111] >', hero.style);
-    }
   },
 };
 </script>
- <style>
- .heros{
-   text-align: center;
-   overflow: hidden;
-   position: relative;
- }
-</style>
+

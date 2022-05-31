@@ -192,12 +192,20 @@ module.exports = {
           mask: "rgba(68, 74, 83, .1)"
         },
         {
-          path: "/home-bg/4.jpg",
+          path: "/home-bg/4.png",
           mask: "rgba(19, 75, 50, .2)"
         },
         {
-          path: "/home-bg/5.jpg"
+          path: "/home-bg/5.png",
+          mask: "rgba(19, 75, 50, .2)"
+        },
+        {
+          path: "/home-bg/6.png",
+          mask: "rgba(19, 75, 50, .2)"
         }
+        // {
+        //   path: "/home-bg/5.jpg"
+        // }
       ]
     },
     nav: [

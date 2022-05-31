@@ -14,12 +14,12 @@ const otherPlugins = [
     {
       audios: [
         // 本地文件示例
-        // {
-        //   name: 'so far away',
-        //   artist: 'martin david',
-        //   url: './public/SoFarAway.mp3',
-        //   cover: './public/avatar.jpg'
-        // },
+        {
+          name: 'Until It Happens To You',
+          artist: 'Sasha Alex Sloan',
+          url: '/media/UntilItHappensToYou.mp3',
+          cover: 'https://www.goflac.com/images/albums/15018827.jpg'
+        },
         {
           name: "So Far Away",
           artist: "Martin Garrix&Jamie Scott&Romy&David Guetta",

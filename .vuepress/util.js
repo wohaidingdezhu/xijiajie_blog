@@ -27,13 +27,13 @@ const homeHeaderImages = {
       path: "/home-bg/3.jpg",
       mask: "rgba(68, 74, 83, .1)"
     },
-    {
-      path: "/home-bg/4.jpg",
-      mask: "rgba(19, 75, 50, .2)"
-    },
-    {
-      path: "/home-bg/5.jpg"
-    }
+    // {
+    //   path: "/home-bg/4.jpg",
+    //   mask: "rgba(19, 75, 50, .2)"
+    // },
+    // {
+    //   path: "/home-bg/5.jpg"
+    // }
   ]
 }
 

@@ -1,6 +1,10 @@
 import MyTemplate from './components/MyTemplate.vue'
+import { addLinkToHead } from '@theme/helpers/utils'
 export default ({ router, Vue, isServer }) => {
     Vue.component('MyTemplate', MyTemplate)
+    if (!isServer) {
+    addLinkToHead('//at.alicdn.com/t/font_2399620_jztf98umdl.css?spm=a313x.7781069.1998910419.84&file=font_2399620_jztf98umdl.css')
+  }
 //   Vue({
     // mounted() {
     //   // 不加 setTimeout 会有报错，但不影响效果
@@ -21,4 +25,20 @@ export default ({ router, Vue, isServer }) => {
     // },
 //   });
 };
+
+
+
+// export default ({
+//   Vue,
+//   siteData,
+//   isServer
+// }) => {
+//   Vue.mixin(postMixin)
+//   Vue.mixin(localMixin)
+//   if (!isServer) {
+//     addLinkToHead('//at.alicdn.com/t/font_2399620_jztf98umdl.css?spm=a313x.7781069.1998910419.84&file=font_2399620_jztf98umdl.css')
+//     addLinkToHead('//at.alicdn.com/t/font_1030519_2ciwdtb4x65.css')
+//     registerCodeThemeCss(siteData.themeConfig.codeTheme)
+//   }
+// }
 

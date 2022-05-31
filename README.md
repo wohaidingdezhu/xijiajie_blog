@@ -82,9 +82,6 @@ body{
 <script>
 export default {
   mounted () {
-    const heros = document.getElementById("heros");
-    console.log(heros,'heros');
-    heros&&this.insertEle(heros,'home-blog');
     const ifJanchor = document.getElementById("JanchorDown"); 
     ifJanchor && ifJanchor.parentNode.removeChild(ifJanchor);
     const aDown = this.createEle('a',null,'JanchorDown','anchor-down');
