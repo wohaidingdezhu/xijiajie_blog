@@ -18,7 +18,7 @@ const otherPlugins = [
           name: 'Until It Happens To You',
           artist: 'Sasha Alex Sloan',
           url: '/media/UntilItHappensToYou.mp3',
-          cover: 'https://www.goflac.com/images/albums/15018827.jpg'
+          cover: 'https://p3fx.kgimg.com/stdmusic/240/20201014/20201014115507894207.jpg'
         },
         {
           name: "So Far Away",
