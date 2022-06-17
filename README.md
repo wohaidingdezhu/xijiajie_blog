@@ -26,7 +26,7 @@ features:
     details: 明天还得写博客
 ---
 
-<MyTemplate></MyTemplate>
+<!-- <MyTemplate></MyTemplate> -->
 
 #### 项目简介
 

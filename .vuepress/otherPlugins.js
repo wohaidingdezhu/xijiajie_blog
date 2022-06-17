@@ -3,12 +3,12 @@ const otherPlugins = [
   "@vuepress-reco/vuepress-plugin-comments",
   "@vuepress-plugin-meting",
   "@vuepress/nprogress",
-  [
-    "@vuepress/register-components",
-    {
-      MyTemplate: path.resolve(__dirname, './components/MyTemplate.vue')  
-    },
-  ],
+  // [
+  //   "@vuepress/register-components",
+  //   {
+  //     MyTemplate: path.resolve(__dirname, './components/MyTemplate.vue')  
+  //   },
+  // ],
   [
     "@vuepress-reco/vuepress-plugin-bgm-player",
     {
