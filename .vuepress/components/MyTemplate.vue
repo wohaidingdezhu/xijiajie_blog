@@ -1,4 +1,4 @@
-
+<!-- 
 <template>
   <div class="buttonId">
     <button class="img-prev">
@@ -28,4 +28,4 @@ export default {
   },
 };
 </script>
-
+ -->
