@@ -26,6 +26,7 @@ features:
     details: 明天还得写博客
 ---
 
+<!-- <canvas id="cvs" style="background-color: #000"></canvas> -->
 <!-- <MyTemplate></MyTemplate> -->
 
 #### 项目简介
@@ -83,14 +84,15 @@ body{
 export default {
   mounted () {
     const ifJanchor = document.getElementById("JanchorDown"); 
+    const bgCanvas = document.querySelector("#bgCanvas");
     ifJanchor && ifJanchor.parentNode.removeChild(ifJanchor);
     const aDown = this.createEle('a',null,'JanchorDown','anchor-down');
     this.insertEle(aDown,'hero');
-    // let targetA = document.getElementById("JanchorDown");
     aDown.addEventListener('click', e => { // 添加点击事件
       this.scrollFn();
     })
-  },
+    // this.renderSnow();
+},
 
   methods: {
     scrollFn() {
@@ -107,6 +109,34 @@ export default {
     },
     insertEle(ele,into){
      return document.getElementsByClassName(`${into}`)[0].append(ele);
+    },
+    renderSnow(){
+      if(!bgCanvas) return;
+      const ctx = bgCanvas.getContext("2d");
+      const { clientWidth: width, clientHeight: height } =
+        document.documentElement;
+      bgCanvas.width = width;
+      bgCanvas.height = height;
+      ctx.fillStyle = "#ffffff";
+      console.log(ctx, "ctx");
+      const bgColors = Array.from(new Array(400)).map((v) => {
+        return {
+          x: Math.random() * width,
+          y: Math.random() * height,
+          step: Math.random() * 2.5 + 0.5,
+        };
+      });
+      const render = () => {
+      ctx.clearRect(0, 0, width, height);
+      ctx.beginPath();
+      bgColors.forEach((v) => {
+        v.y = v.y > height ? 0 : v.y + v.step;
+        ctx.rect(v.x, v.y, 3, 4);
+      });
+      ctx.fill();
+      window.requestAnimationFrame(render);
+     };
+     render();
     }
   }
 }

@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+</head>
+
+<body>
+    <button>按钮</button>
+    <div style="height: 1500px">1</div>
+</body>
+
+</html>
+<script>
+    const button = document.querySelector("button");
+
+    function debounce(fun, time) {
+        console.log("debounce111"); //执行一次，因为事件箭头绑定的是debounce()
+        //监听click执行的函数实际上是 debounce 执行后的返回函数。你一执行这个代码，就会先跑一遍 debounce 函数（此时会执行你的console.log），然后把返回的函数作为 click 的事件处理函数。后面你触发 click，执行的是 debounce 返回的函数而不是 debounce 函数
+        let timer;
+        return function() {
+            console.log('debounce222')
+            clearTimeout(timer);
+            let args = arguments;
+            timer = setTimeout(() => {
+                fun.apply(this, args);
+            }, time);
+        };
+    }
+    button.addEventListener(
+        "click",
+        debounce(() => {
+            console.log("debounce");
+        }, 3000)
+    );
+
+    const throttle = (fn, time) => {
+        let t1 = 0;
+        console.log(t1, "t1");
+        return () => {
+            console.log(2, "2");
+            const t2 = Date.now();
+            const t3 = new Date(); //这个会隐式转换
+            if (t3 - t1 > time) {
+                fn();
+                t1 = t2;
+            }
+        };
+    };
+    const scroll = () => {
+        console.log("scroll");
+    };
+    // document.addEventListener("scroll",scroll);
+    document.addEventListener("scroll", throttle(scroll, 3000));
+
+    // const arr = [{name:"1"},{name:"2"},{name:"3"}];
+    // const arrb = [3,4,5,67,8];
+    // // map,map 的返回值也是一个数组
+    // const getNewArr = (a)=>{
+    //   let newArr = a.map(item=>{
+    //       //  console.log(item['name'],'item[name]')
+    //       //   const b = [];
+    //       //   let curKey = Object.keys(item) //Object.keys可以提取出对象中的key值,注意取出的key是数组
+    //       //   console.log(item,curKey,item[curKey],'item')
+    //       //   return item[curKey[0]]
+    //       return item+1;
+    //     })
+    //     return newArr
+    // }
+
+    // let newArr = getNewArr(arrb)
+    // console.log(newArr)//[ 1, 1, 2 ]
+</script>

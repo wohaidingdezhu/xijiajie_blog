@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <script>
+      const isFunction = (value) => typeof value === "function";
+      class MyPromise {
+        constructor(executor) {
+          this.state = "pending";
+          this.value = undefined;
+          this.reason = undefined;
+          this.onFullFilledCallbacks = [];
+          this.onRejectedCallbacks = [];
+          this.stateCalled = undefined;
+          let resolve = (value) => {
+            // if (this.stateCalled) return;
+            this.stateCalled = true;
+            this.value = value;
+            this.state = "fullFilled";
+            this.onFullFilledCallbacks.forEach((fn) => fn());
+          };
+          let reject = (reason) => {
+            // if (this.stateCalled) return;
+            this.stateCalled = true;
+            this.state = "rejected";
+            this.reason = reason;
+            this.onRejectedCallbacks.forEach((fn) => fn());
+          };
+          try {
+            executor(resolve, reject);
+          } catch (error) {
+            reject(error);
+          }
+        }
+        then(onFullFilled, onRejected) {
+          //函数参透
+          onFullFilled = isFunction(onFullFilled)
+            ? onFullFilled
+            : (data) => data;
+          // onFullFilled = onFullFilled==='function'?onFullFilled():onFullFilled
+          onRejected = isFunction(onRejected)
+            ? onRejected
+            : (err) => {
+                throw err;
+              };
+          const p2 = new MyPromise((resolve, reject) => {
+            let x;
+            if (this.state === "fullFilled") {
+              setTimeout(() => {
+                try {
+                  x = onFullFilled(this.value);
+                  //   resolve(x);
+                  //  在初始化之前不能直接访问P2，需要异步 加个宏任务
+                  resolvePromise(p2, x, resolve, reject); //..
+                } catch (err) {
+                  reject(err);
+                }
+              }, 0);
+            }
+            if (this.state === "rejected") {
+              setTimeout(() => {
+                try {
+                  x = onRejected(this.reason);
+                  resolvePromise(p2, x, resolve, reject); //..
+                } catch (err) {
+                  reject(err);
+                }
+              }, 0);
+            }
+            if (this.state === "pending") {
+              // 异步,push一个函数直接穿参数，省的上面forEach的时候执行传参
+              // 是一种代理模式，策略模式
+              this.onFullFilledCallbacks.push(() => {
+                setTimeout(() => {
+                  try {
+                    x = onFullFilled(this.value);
+                    resolvePromise(p2, x, resolve, reject);
+                  } catch (err) {
+                    reject(err);
+                  }
+                }, 0);
+              });
+              this.onRejectedCallbacks.push(() => {
+                setTimeout(() => {
+                  try {
+                    x = onRejected(this.reason);
+                    resolvePromise(p2, x, resolve, reject); //普通值
+                  } catch (err) {
+                    reject(err);
+                  }
+                }, 0);
+              });
+            }
+          });
+          return p2;
+        }
+      }
+
+      function resolvePromise(p2, x, resolve, reject) {
+        let called;
+        if (p2 === x) {
+          return reject(new TypeError("typeError"));
+        }
+        if ((typeof x === "object" && x !== null) || typeof x === "function") {
+          try {
+            let then = x.then; //then是一个Promise,我们想要reslove(10).then
+            if (typeof then === "function") {
+              then.call(
+                x,
+                (y) => {
+                  //会出现一个分支走两次的情况呢
+                  if (called) return;
+                  called = true;
+                  //y有可能是一个promise
+                  resolvePromise(p2, y, resolve, reject);
+                },
+                (z) => {
+                  if (called) return;
+                  called = true;
+                  reject(z);
+                }
+              );
+            } else {
+              if (called) return;
+              called = true;
+              resolve(x);
+            }
+          } catch (error) {
+            if (called) return;
+            called = true;
+            reject(error);
+          }
+        } else {
+          //普通值就直接reslove
+          resolve(x);
+        }
+      }
+      //   const p1 = new MyPromise((resolve, reject) => {
+      //     // setTimeout(() => {
+      //     resolve(1);
+      //     // reject(2);
+      //     // }, 1000);
+      //   });
+      //   // 如果需要链式调用 p2不允许直接等于.then的返回值，需要是一个新的promise
+      //   const p2 = p1.then(
+      //     (res) => {
+      //       //   console.log(res, "p1");
+      //       //   return res + 1;
+      //       // return new MyPromise((resolve, reject) => {
+      //       //   resolve(10000);
+      //       //   // reject(3000);
+      //       // });
+      //       return new MyPromise((resolve, reject) => {
+      //         resolve(
+      //           new MyPromise((resolve, reject) => {
+      //             resolve(3000);
+      //           })
+      //         );
+      //       });
+      //       //   return new MyPromise((resolve, reject) => {
+      //       //     resolve(
+      //       //       new MyPromise((resolve, reject) => {
+      //       //         resolve(
+      //       //           new MyPromise((resolve, reject) => {
+      //       //             resolve(10000);
+      //       //           })
+      //       //         );
+      //       //       })
+      //       //     );
+      //       //   });
+      //     },
+      //     (error) => {
+      //       console.log(error, "error22");
+      //       // 返回一个普通值
+      //       return error + 111;
+      //     }
+      //   );
+      //   p2.then(
+      //     (res) => {
+      //       //   console.log(res, "success");
+      //       //如果需要再次李哦啊
+      //     },
+      //     (err) => {
+      //       console.log(err, "p2");
+      //     }
+      //   );
+
+      const url = "http://jsonplaceholder.typicode.com/posts";
+
+      const loaderImage = (url) => {
+        var p = new MyPromise(function (resolve, reject) {
+          var img = new Image();
+          // resolve 是表示正确完成时执行的函数
+          img.onload = function () {
+            resolve(img);
+          };
+          // reject 时表示错误时执行的函数
+          img.onerror = function () {
+            reject(url);
+          };
+          img.src = url;
+        });
+        return p;
+      };
+      const fetchData = (requestUrl) => {
+        const p = new MyPromise((resolve, reject) => {
+          fetch(requestUrl)
+            .then((res) => {
+              const newRes = res.json();
+              resolve(newRes);
+            })
+            .catch((e) => {
+              reject("发生错误");
+            });
+        });
+        return p;
+      };
+      const testList = [fetchData(url), fetchData(url), fetchData(url)];
+      MyPromise.resolve = (value) => {
+        if (value instanceof MyPromise) return value;
+        return new MyPromise((resolve) => resolve(value));
+      };
+      MyPromise.reject = (value) => {
+        return new MyPromise((resolve, reject) => {
+          reject(val);
+        });
+      };
+      MyPromise.all = (promiseArr) => {
+        let res_arr = [];
+        let currentIndex = 0;
+        let resloveState;
+        console.log("执行了一次");
+        return new MyPromise(
+          (resolve, reject) => {
+            //   这里其实就是执行了传入数组中的promise
+            for (let i = 0; i < promiseArr.length; i++) {
+              //promiseArr[i] 由于fetchData 执行返回了new MyPomise
+              //promiseArr[i] 返回的结果是每个Pomise
+              promiseArr[i].then((res) => {
+                currentIndex += 1;
+                res.then(
+                  (newres) => {
+                    res_arr[i] = newres;
+                  },
+                  (err) => reject(err)
+                );
+                console.log(currentIndex, "currentIndex");
+                if (currentIndex === promiseArr.length) {
+                  let newArr = res_arr;
+                  resolve(newArr);
+                }
+              });
+            }
+          },
+          (err) => reject(err)
+        );
+      };
+      // MyPromise.all(testList).then((res) => {
+      //   //这里的res 不是[Promise,Promisem,Promise]而是promise返回的结果
+      //   console.log(res, "then");
+      //   res.forEach((item) => {
+      //     //   console.log("item", item);
+      //   });
+      // });
+      const iamgeList = [
+        loaderImage("./img/3-.jpg"),
+        loaderImage("./img/4-.jpg"),
+      ];
+      MyPromise.race = (promiseArr) => {
+        let firstResloveRes ;
+        return new MyPromise((resolve, reject) => {
+          promiseArr.forEach((item, index) => {
+            console.log('item',item);
+            let current = promiseArr[index];
+            current.then((y) => {
+              console.log("y", y);
+              resolve(y);
+              // setTimeout(()=>{
+              //   if (firstResloveRes) {
+              //     resolve(firstResloveRes);
+              //   }
+              // })
+            });
+          });
+          // if (
+          //   (typeof x === "object" && x !== null) ||
+          //   typeof x === "function"
+          // ) {
+
+          // } else {
+          //   //普通值就直接reslove
+          //   resolve(x);
+          // }
+        });
+      };
+      // Promise.race(testList).then((res) => {
+      //   console.log(res, "race-res");
+      // });
+      MyPromise.race(iamgeList).then((res) => {
+        console.log(res, "myrace-res");
+      });
+    </script>
+  </body>
+</html>
