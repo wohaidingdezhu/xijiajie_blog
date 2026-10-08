@@ -2,10 +2,16 @@
   "name": "xijaijie_blog",
   "version": "1.0.0",
   "author": "xijiajie",
+  "packageManager": "yarn@1.22.22",
+  "engines": {
+    "node": "22.x",
+    "yarn": "1.22.x"
+  },
   "scripts": {
-    "dev": "vuepress dev . --host \"localhost\"",
-    "build": "vuepress build .",
-    "deploy": "bash deploy.sh"
+    "dev": "node --openssl-legacy-provider node_modules/vuepress/cli.js dev . --host \"localhost\"",
+    "build": "node --openssl-legacy-provider node_modules/vuepress/cli.js build .",
+    "deploy": "bash deploy.sh",
+    "test": "node --test tests/*.test.cjs"
   },
   "devDependencies": {
     "@vuepress/plugin-google-analytics": "^1.9.7",

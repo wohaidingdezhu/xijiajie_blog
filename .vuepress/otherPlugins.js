@@ -1,7 +1,6 @@
-const path = require("path");
 const otherPlugins = [
     "@vuepress-reco/vuepress-plugin-comments",
-    "@vuepress-plugin-meting",
+    "vuepress-plugin-meting",
     "@vuepress/nprogress", [
         "@vuepress-reco/vuepress-plugin-bgm-player",
         {
@@ -12,18 +11,6 @@ const otherPlugins = [
                     artist: 'Sasha Alex Sloan',
                     url: '/media/UntilItHappensToYou.mp3',
                     cover: 'https://p3fx.kgimg.com/stdmusic/240/20201014/20201014115507894207.jpg'
-                },
-                {
-                    name: "So Far Away",
-                    artist: "Martin Garrix&Jamie Scott&Romy&David Guetta",
-                    url: "http://www.ytmp3.cn/down/58663.mp3",
-                    cover: "http://p1.music.126.net/bDdwz0zd-BGYpel1QEU2RA==/109951165983886039.jpg?param=130y130",
-                },
-                {
-                    name: "Paris",
-                    artist: "The Chainsmokers",
-                    url: "https://www.ytmp3.cn/down/50459.mp3",
-                    cover: "http://p1.music.126.net/SuCNw1Twu5gs_UT66_eQdA==/109951165981300158.jpg?param=130y130",
                 },
             ],
         },

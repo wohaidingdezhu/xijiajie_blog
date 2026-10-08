@@ -1,8 +1,10 @@
 const fs = require('fs');
 const path = require('path');
 const getFile = (prefixPath) => {
-  return fs.readdirSync(path.join(process.cwd(), prefixPath))
-           .map(item => `${prefixPath}/${item.replace('.md', '')}`)
+  return fs.readdirSync(path.join(process.cwd(), prefixPath), { withFileTypes: true })
+           .filter(item => item.isFile() && item.name.endsWith('.md'))
+           .sort((a, b) => a.name.localeCompare(b.name, 'en', { numeric: true }))
+           .map(item => `${prefixPath}/${item.name.slice(0, -3)}`)
 }
 
 const createSideBarConfig = (title, prefixPath, collapsable = true) => {

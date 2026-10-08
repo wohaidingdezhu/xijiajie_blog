@@ -5,6 +5,7 @@ module.exports = {
     dest: "public",
     base: "/",
     port: "9999",
+    patterns: ["**/*.md", "**/*.vue", "!CONTRIBUTING.md"],
     head: [
         [
             "link",
