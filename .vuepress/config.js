@@ -50,6 +50,10 @@ module.exports = {
                 link: "/timeline/",
             },
             {
+                text: "前端资料库",
+                link: "https://wohaidingdezhu.github.io/fe-interview/",
+            },
+            {
                 text: "GitHub",
                 link: "https://github.com/wohaidingdezhu",
             }
