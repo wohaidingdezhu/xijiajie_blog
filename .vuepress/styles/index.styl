@@ -1,52 +1,400 @@
-body {
-  font-size: 18px!important;
+// 浅色配色与 fe-interview 对齐；reco 会写入内联变量，需要覆盖模式默认值。
+:root, :root.light {
+  --background-color: #fff !important;
+  --text-color: #293b36 !important;
+  --text-color-sub: #81908a !important;
+  --border-color: #e7ece9 !important;
+  --code-color: #f0f3ee !important;
+  --minimal-accent: #26765e;
+  --minimal-heading: #233c2e;
+  --minimal-title: #314a38;
+  --minimal-surface: #fafbf9;
+  --minimal-field: #f7f9f7;
+  --minimal-selected: #e6efe7;
+  --minimal-tag: #f6f8f3;
+  --minimal-tag-text: #7b8d78;
+  --minimal-inline-code: #507345;
+  --minimal-focus: #90cbb4;
+  --minimal-selection: #d9eee2;
+  --box-shadow: none !important;
+  --box-shadow-hover: none !important;
 }
 
-.navbar .links {
-  font-size: 1rem!important;
-  font-weight: 500!important;
+:root.dark {
+  --background-color: #14211d !important;
+  --text-color: #dce8df !important;
+  --text-color-sub: #a9bcb0 !important;
+  --border-color: #30433b !important;
+  --code-color: #20332b !important;
+  --minimal-accent: #9fd7ae;
+  --minimal-heading: #f0f6f1;
+  --minimal-title: #dce8df;
+  --minimal-surface: #192a24;
+  --minimal-field: #192a24;
+  --minimal-selected: #263c33;
+  --minimal-tag: #20332b;
+  --minimal-tag-text: #a9bcb0;
+  --minimal-inline-code: #9fd7ae;
+  --minimal-focus: #9fd7ae;
+  --minimal-selection: #416b59;
 }
 
-.search-box .DocSearch-Button {
-    cursor: text;
-    width: 10rem;
-    height: 2rem;
-    color: #5b5b5b;
-    border: 1px solid var(--border-color);
-    border-radius: 0.25rem;
-    font-size: 0.9rem;
-    padding: 0 0.5rem 0 0rem;
-    outline: none;
-    transition: all 0.2s ease;
-    background: transparent;
-    background-size: 1rem;
+html body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+  font-size: 16px;
 }
 
-.search-box .DocSearch-Button-Container {
-    margin-left: 0.4rem;
+html .theme-container a, html .theme-container .nav-links a:hover, html .theme-container .nav-links a.router-link-active,
+html .theme-container .sidebar a.sidebar-link.active, html .theme-container .sidebar a.sidebar-link:hover,
+html .theme-container .page .side-bar .sidebar-link, html .theme-container .color-picker .color-button .iconfont {
+  color: var(--minimal-accent);
 }
 
-.search-box .DocSearch-Button .DocSearch-Search-Icon {
-    width: 16px;
-    height: 16px;
-    position: relative;
-    top: 0.1rem;
+a:focus-visible, button:focus-visible, input:focus-visible {
+  outline: 2px solid var(--minimal-focus);
+  outline-offset: 4px;
 }
 
-.search-box .DocSearch-Button-Placeholder {
-    font-size: 0.8rem;
+::selection {
+  background: var(--minimal-selection);
 }
 
-.search-box .DocSearch-Button-Keys{
-    display:flex;
+html .theme-container .search-box input {
+  background-color: var(--minimal-field);
+  border-color: var(--border-color);
+  color: var(--text-color);
 }
 
-
-.search-box .DocSearch-Button-Key {
-    font-size: 12px;
-    line-height: 20px;
+html .theme-container .search-box input:focus {
+  border-color: var(--minimal-accent);
 }
 
-::-webkit-scrollbar
-  width: 5px;
-  height: 5px;
+html .theme-container .search-box .suggestion.focused,
+html .theme-container .sidebar a.sidebar-link.active {
+  background: var(--minimal-selected);
+}
+
+html .theme-container .navbar {
+  border-bottom: 1px solid var(--border-color);
+}
+
+html .theme-container .navbar .site-name {
+  font-size: 17px;
+  letter-spacing: .02em;
+}
+
+html .theme-container .navbar .links {
+  font-size: 14px;
+}
+
+html .theme-container .nav-links .iconfont {
+  display: none;
+}
+
+html .theme-container .home-blog .hero {
+  height: auto;
+  min-height: 220px;
+  max-width: 1100px;
+  padding: 64px 24px 40px;
+  justify-content: flex-start;
+}
+
+html .theme-container .home-blog .hero h1 {
+  margin: 0 0 12px;
+  font-size: 38px;
+  font-weight: 600;
+  letter-spacing: -.03em;
+  color: var(--minimal-heading);
+}
+
+html .theme-container .home-blog .hero .description {
+  margin: 0;
+  font-size: 16px;
+  line-height: 1.75;
+  color: var(--text-color-sub);
+}
+
+html .theme-container .home-blog .home-blog-wrapper {
+  margin-top: 0;
+  padding: 0 24px;
+  box-sizing: border-box;
+}
+
+html .theme-container .home-blog .home-blog-wrapper .info-wrapper {
+  flex-basis: 220px;
+  margin-left: 48px;
+  padding: 0 0 0 24px;
+  border-left: 1px solid var(--border-color);
+  border-radius: 0;
+}
+
+html .theme-container .home-blog .info-wrapper .personal-img {
+  width: 48px;
+  height: 48px;
+  margin: 12px auto;
+}
+
+html .theme-container .home-blog .info-wrapper .personal-info-wrapper .num,
+html .theme-container .home-blog .info-wrapper hr, html .theme-container .sidebar .personal-info-wrapper {
+  display: none;
+}
+
+html .theme-container .home-blog .info-wrapper h4 {
+  margin: 28px 0 12px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-color-sub);
+}
+
+html .theme-container .home-blog .info-wrapper h4 .iconfont {
+  display: none;
+}
+
+html .theme-container .home-blog .home-blog-wrapper .info-wrapper .category-item {
+  margin: 0;
+  padding: 8px 0;
+}
+
+html .theme-container .home-blog .home-blog-wrapper .info-wrapper .category-item:hover,
+html .theme-container .tags span:hover, html .theme-container .tags span.active {
+  transform: none !important;
+}
+
+html .theme-container .category-wrapper .post-num, html .theme-container .tags > span {
+  background: var(--minimal-tag) !important;
+  color: var(--minimal-tag-text) !important;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+}
+
+html .theme-container .tags > span {
+  line-height: 1.5;
+  margin: 3px;
+}
+
+html .theme-container .tags > span.active {
+  color: var(--minimal-accent) !important;
+  background: var(--minimal-selected) !important;
+  border-color: var(--minimal-accent);
+}
+
+html .theme-container .abstract-wrapper .abstract-item {
+  margin: 0;
+  padding: 22px 0;
+  border-radius: 0;
+  border-bottom: 1px solid var(--border-color);
+  transition: none;
+}
+
+html .theme-container .abstract-wrapper .abstract-item .title {
+  font-size: 19px;
+  line-height: 1.6;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+html .theme-container .abstract-wrapper .abstract-item .title:after {
+  display: none;
+}
+
+html .theme-container .abstract-wrapper .abstract-item .title a {
+  color: var(--minimal-title);
+}
+
+html .theme-container .abstract-wrapper .abstract-item .title:hover a {
+  color: var(--minimal-accent);
+}
+
+html .theme-container .abstract-wrapper .abstract-item .reco-account {
+  display: none;
+}
+
+html .theme-container .abstract-wrapper .abstract-item .iconfont {
+  font-size: 13px;
+}
+
+html .theme-container .abstract-wrapper .abstract-item .iconfont:before {
+  display: none;
+}
+
+html .theme-container .abstract-wrapper .abstract-item .iconfont span {
+  margin-left: 0;
+}
+
+html .theme-container .page .theme-reco-content {
+  font-size: 17px;
+}
+
+html .theme-container .theme-reco-content p, html .theme-container .theme-reco-content ul, html .theme-container .theme-reco-content ol {
+  line-height: 1.8;
+}
+
+html .theme-container .theme-reco-content h2 {
+  padding-left: 0;
+}
+
+html .theme-container .theme-reco-content h2:before {
+  display: none;
+}
+
+html .theme-container .page .page-title .title {
+  font-size: 30px;
+  font-weight: 600;
+  color: var(--minimal-heading);
+}
+
+html .theme-container .sidebar {
+  font-size: 14px;
+  background: var(--minimal-surface);
+}
+
+html .theme-container .sidebar .sidebar-heading,
+html .theme-container .sidebar a.sidebar-link {
+  color: var(--text-color-sub);
+}
+
+html .theme-container .sidebar a.sidebar-link.active,
+html .theme-container .sidebar a.sidebar-link:hover {
+  color: var(--minimal-accent);
+}
+
+html .theme-container .theme-reco-content h2,
+html .theme-container .theme-reco-content h3 {
+  color: var(--minimal-heading);
+}
+
+html .theme-container .theme-reco-content :not(pre) > code {
+  color: var(--minimal-inline-code);
+}
+
+html .theme-container .theme-reco-content blockquote {
+  color: var(--text-color-sub);
+  border-left-color: var(--minimal-accent);
+  background: var(--minimal-surface);
+}
+
+// 对齐资料库的墨绿色代码块和语法色，覆盖 reco 加载的 Prism 默认主题。
+html .theme-container div[class*="language-"] {
+  background: $codeBgColor;
+}
+
+html .theme-container pre[class*="language-"],
+html .theme-container pre[class*="language-"] code {
+  color: #dce7e0;
+  background: transparent;
+  text-shadow: none;
+}
+
+html .theme-container div[class*="language-"] .line-numbers-wrapper,
+html .theme-container div[class*="language-"]:before {
+  color: #9cbda0;
+}
+
+html .theme-container div[class*="language-"].line-numbers-mode:after {
+  background: $codeBgColor;
+  border-right-color: #48594f;
+}
+
+html .theme-container .token {
+  background: transparent;
+  text-shadow: none;
+}
+
+html .theme-container .token.comment, html .theme-container .token.prolog,
+html .theme-container .token.doctype, html .theme-container .token.cdata,
+html .theme-container .token.string, html .theme-container .token.char,
+html .theme-container .token.attr-value, html .theme-container .token.inserted {
+  color: #9cbda0;
+}
+
+html .theme-container .token.keyword, html .theme-container .token.boolean,
+html .theme-container .token.atrule {
+  color: #c5b5ed;
+}
+
+html .theme-container .token.number, html .theme-container .token.constant,
+html .theme-container .token.symbol, html .theme-container .token.attr-name,
+html .theme-container .token.regex, html .theme-container .token.variable {
+  color: #e4be8f;
+}
+
+html .theme-container .token.function, html .theme-container .token.class-name,
+html .theme-container .token.tag, html .theme-container .token.property {
+  color: #94c8d2;
+}
+
+html .theme-container .token.operator, html .theme-container .token.entity,
+html .theme-container .token.url {
+  color: #dbdfc6;
+}
+
+html .theme-container .token.punctuation {
+  color: #dce7e0;
+}
+
+html .theme-container .token.deleted, html .theme-container .token.important {
+  color: #f39b8f;
+}
+
+html .theme-container .v-copy-code-btn {
+  color: #bccfc1;
+}
+
+html .theme-container .v-copy-code-btn:hover {
+  color: #fff;
+}
+
+html .theme-container .pagation .pagation-list span.bgprimary {
+  color: var(--minimal-accent);
+  background: var(--minimal-selected);
+  border-color: var(--minimal-accent) !important;
+}
+
+html .theme-container .footer-wrapper {
+  margin: 48px auto 0;
+}
+
+@media (max-width: 959px) {
+  html .theme-container .home-blog .home-blog-wrapper .info-wrapper {
+    flex-basis: 180px;
+    margin-left: 28px;
+    padding-left: 20px;
+  }
+  html .theme-container .page {
+    padding-right: 0;
+  }
+  html .theme-container .page .side-bar {
+    display: none;
+  }
+}
+
+@media (max-width: 719px) {
+  html .theme-container .home-blog .hero {
+    min-height: 180px;
+    padding: 40px 24px 24px;
+  }
+  html .theme-container .home-blog .hero h1 {
+    font-size: 30px;
+  }
+  html .theme-container .home-blog .home-blog-wrapper .info-wrapper {
+    margin: 40px 0 0;
+    padding: 16px 0 0;
+    border-left: 0;
+    border-top: 1px solid var(--border-color);
+  }
+  html .theme-container .abstract-wrapper .abstract-item .tags {
+    display: inline-block;
+    margin-top: 0;
+  }
+  html .theme-container .page .page-title .title {
+    font-size: 26px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *:before, *:after {
+    animation-duration: .01ms !important;
+    transition-duration: .01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

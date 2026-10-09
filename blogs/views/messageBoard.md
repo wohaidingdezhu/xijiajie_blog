@@ -1,6 +1,6 @@
 ---
 title: '留言板'
-isShowComments: true
+isShowComments: false
 ---
 
 ::: tip
