@@ -28,6 +28,15 @@ module.exports = {
     ],
     plugins: otherPlugins,
     theme: "reco",
+    chainWebpack(config) {
+        // 仅替换旧主题的目录组件，保留主题其他组件和样式。
+        // 精确别名必须先于 @theme，否则旧版 Webpack 会先匹配整个主题目录。
+        const aliases = config.resolve.alias.entries();
+        config.resolve.alias.clear();
+        config.resolve.alias.set('@theme/components/SubSidebar$',
+            require.resolve('./theme-overrides/SubSidebar.vue'));
+        config.resolve.alias.merge(aliases);
+    },
     themeConfig: {
         mode: "auto",
         modePicker: true,
