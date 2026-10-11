@@ -11,6 +11,9 @@ module.exports = {
     port: "9999",
     patterns: ["**/*.md", "**/*.vue", "!CONTRIBUTING.md"],
     head: [
+        ['link', { rel: 'preconnect', href: 'https://fonts.googleapis.com' }],
+        ['link', { rel: 'preconnect', href: 'https://fonts.gstatic.com', crossorigin: '' }],
+        ['link', { rel: 'stylesheet', href: 'https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap' }],
         [
             "link",
             {
@@ -38,8 +41,9 @@ module.exports = {
         config.resolve.alias.merge(aliases);
     },
     themeConfig: {
-        mode: "auto",
-        modePicker: true,
+        mode: "light",
+        modePicker: false,
+        libraryUrl: "https://wohaidingdezhu.github.io/fe-interview/",
         subSidebar: "auto",
         nav: [{
                 text: "主页",
@@ -60,12 +64,7 @@ module.exports = {
         ],
         sidebar,
         type: "blog",
-        blogConfig: {
-            category: {
-                location: 2,
-                text: "分类",
-            },
-        },
+        blogConfig: {},
         search: true,
         searchPlaceholder: "搜索文章",
         searchMaxSuggestions: 6,
@@ -75,6 +74,6 @@ module.exports = {
         startYear: "2021",
     },
     markdown: {
-        lineNumbers: true,
+        lineNumbers: false,
     },
 };

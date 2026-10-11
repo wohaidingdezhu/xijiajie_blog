@@ -15,6 +15,7 @@ test('中文和带特殊字符的目录锚点可跳转，保留原有滚动行�
   const ids = new Set(['体验', '1-类型:string']);
   global.document = {
     getElementById: (id) => ids.has(id) ? { getBoundingClientRect: () => ({ top: 120 }) } : null,
+    querySelector: () => null,
   };
   global.window = { pageYOffset: 400 };
   let disableScroll = false;
@@ -30,6 +31,10 @@ test('中文和带特殊字符的目录锚点可跳转，保留原有滚动行�
   assert.equal(scroll({ hash: '#%ZZ' }, {}), false);
   assert.equal(scroll({ hash: '' }, {}), 'default');
   assert.equal(scroll({ hash: '#体验' }, {}, saved), saved);
+  global.document.querySelector = () => ({ getBoundingClientRect: () => ({ height: 80 }) });
+  assert.deepEqual(scroll({ hash: '#体验' }, {}), { x: 0, y: 416 });
+  global.document.querySelector = () => ({ getBoundingClientRect: () => ({ height: 68 }) });
+  assert.deepEqual(scroll({ hash: '#体验' }, {}), { x: 0, y: 428 });
   disableScroll = true;
   assert.equal(scroll({ hash: '#体验' }, {}), false);
 });

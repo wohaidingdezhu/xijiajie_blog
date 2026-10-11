@@ -9,20 +9,27 @@ cd "$(dirname "$0")"
 # 生成静态文件
 yarn build
 
-# 进入生成的文件夹
-cd public
+# 在现有发布分支上更新，保留历史和构建目录之外的站点内容。
+# HTTPS 可使用 Git 凭证；已登录 GitHub CLI 时复用它的凭证助手。
+git_publish() {
+  if command -v gh >/dev/null 2>&1 && gh auth status >/dev/null 2>&1; then
+    git -c credential.helper='!gh auth git-credential' "$@"
+  else
+    git "$@"
+  fi
+}
 
-# 让 GitHub Pages 直接提供 VuePress 生成的静态文件
-touch .nojekyll
+release_dir=$(mktemp -d "${TMPDIR:-/tmp}/xijiajie-blog-deploy.XXXXXX")
+trap 'rm -rf "$release_dir"' EXIT HUP INT TERM
+git_publish clone --depth 1 --single-branch --branch master \
+  https://github.com/wohaidingdezhu/wohaidingdezhu.github.io.git "$release_dir"
 
-git init
-git add .
-if ! git diff --cached --quiet; then
-  git commit -m 'deploy'
+# 不删除发布仓库中的其他路径，旧资源也保留以兼容已打开的页面。
+rsync -a --exclude=.git public/ "$release_dir/"
+touch "$release_dir/.nojekyll"
+git -C "$release_dir" add .
+if ! git -C "$release_dir" diff --cached --quiet; then
+  git -C "$release_dir" commit -m 'chore(deploy): publish blog'
+  git_publish -C "$release_dir" push origin HEAD:master
 fi
-
-# 如果发布到 https://<USERNAME>.github.io  填写你刚刚创建的仓库地址
-git push -f git@github.com:wohaidingdezhu/wohaidingdezhu.github.io.git HEAD:master
-
-cd ..
 
