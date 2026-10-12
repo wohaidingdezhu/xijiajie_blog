@@ -9,6 +9,7 @@ const articles = {
   bind: 'blogs/javascript/js-base/2.md',
   call: 'blogs/javascript/js-base/3.md',
   timing: 'blogs/javascript/js-base/7.md',
+  refactoring: 'blogs/javascript/js-base/4.md',
 };
 
 function snippets(name) {
@@ -95,6 +96,17 @@ test('new 文章实际代码保留参数、直接原型和构造函数返回值'
   const context = load('new');
   assert.equal(vm.runInContext('function Plain() {} Plain.prototype = 1; Object.getPrototypeOf(newFactory(Plain)) === Object.prototype', context), true);
   assert.throws(() => newFactory(null), { name: 'TypeError' });
+});
+
+test('代码优化文章示例可执行，字符串包含全部字段，销量调用方复用平均值', () => {
+  const messages = [];
+  const context = load('refactoring', { console: { log: (value) => messages.push(value) } });
+  assert.equal(messages[0], 'User info : Id : 8001 Name : xiaoming Token : a56y07go');
+  assert.equal(messages[1], 'start | 8001 | xiaoming | a56y07go | end');
+  assert.equal(context.GetSalesVolumes([10, 20]), 15);
+  assert.equal(context.FormatSalesVolumContent([10, 20]), 'Show the sales volume :15');
+  assert.equal(context.GetNextStagePointVolume([10, 20]), 18);
+  assert.equal(context.GetNextStageMinVolume([10, 20]), 13.5);
 });
 
 test('call/apply 文章实际代码支持严格 this、冻结对象和类数组参数', () => {
