@@ -21,7 +21,7 @@
           </header>
           <div v-if="query || tag" class="filter-status">
             <span>{{ query ? '搜索：' + query : '标签：' + tag }}</span>
-            <router-link :to="tag ? '/' : $route.path">清除筛选</router-link>
+            <router-link :to="clearFilterPath">清除筛选</router-link>
           </div>
           <div v-if="!filtered.length" class="empty-state">
             <h2>没有找到相关文章</h2><p>试试更短的关键词，或浏览全部文章。</p>
@@ -73,6 +73,7 @@ export default {
     },
     tag() { return this.$route.meta.pid === 'tags' && this.$currentTags ? this.$currentTags.key || '' : '' },
     query() { return typeof this.$route.query.q === 'string' ? this.$route.query.q.trim() : '' },
+    clearFilterPath() { return this.query ? this.$route.path.replace(/page\/\d+\/$/, '') : '/' },
     isCollection() {
       return this.$page.path && (this.$page.frontmatter.home || this.isArchive ||
         this.$route.path.startsWith('/categories/') || this.$route.path.startsWith('/tag/'))

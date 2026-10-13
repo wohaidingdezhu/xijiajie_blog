@@ -6,8 +6,8 @@
     </nav>
     <nav class="category-nav" aria-label="按分类浏览" @click="$emit('navigate')">
       <p class="sidebar-section-label">按分类浏览</p>
-      <router-link to="/" class="category-link" :class="{ active: !category && $route.path !== '/timeline/' }">全部文章<span>{{ posts.length }}</span></router-link>
-      <router-link v-for="item in categories" :key="item.name" :to="item.path" class="category-link" :class="{ active: category === item.name }" :aria-current="category === item.name ? 'true' : null">
+      <router-link :to="categoryLink('/')" class="category-link" :class="{ active: !category && $route.path !== '/timeline/' }">全部文章<span>{{ posts.length }}</span></router-link>
+      <router-link v-for="item in categories" :key="item.name" :to="categoryLink(item.path)" class="category-link" :class="{ active: category === item.name }" :aria-current="category === item.name ? 'true' : null">
         {{ categoryName(item.name) }}<span>{{ item.count }}</span>
       </router-link>
     </nav>
@@ -32,6 +32,12 @@ export default {
     },
     related() { return this.$page.path && this.$page.path.startsWith('/blogs/') ? this.posts.filter(post => values(post.frontmatter.categories).includes(this.category)) : [] }
   },
-  methods: { categoryName }
+  methods: {
+    categoryName,
+    categoryLink(path) {
+      const query = this.$route.query.q
+      return { path, query: typeof query === 'string' && query.trim() ? { q: query.trim() } : {} }
+    }
+  }
 }
 </script>
