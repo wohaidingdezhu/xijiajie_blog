@@ -13,19 +13,23 @@ export function mountCodeCopy(root) {
     const copy = async () => {
       const code = pre.textContent;
       let copied = false;
-      try {
-        if (navigator.clipboard && window.isSecureContext) {
+      if (navigator.clipboard && window.isSecureContext) {
+        try {
           await navigator.clipboard.writeText(code);
           copied = true;
-        } else {
+        } catch (_) { /* 浏览器复制接口不可用时继续尝试备用方式。 */ }
+      }
+      if (!active) return;
+      if (!copied) {
+        try {
           const field = document.createElement('textarea');
           field.value = code;
           field.style.cssText = 'position:fixed;left:-9999px;top:0';
           document.body.appendChild(field);
           try { field.select(); copied = document.execCommand('copy'); }
           finally { field.remove(); if (active) button.focus({ preventScroll: true }); }
-        }
-      } catch (_) { /* 复制权限不可用时保留手动选择。 */ }
+        } catch (_) { /* 复制权限不可用时保留手动选择。 */ }
+      }
       if (!active) return;
       button.textContent = copied ? '已复制' : '请手动选择复制';
       clearTimeout(timer);
