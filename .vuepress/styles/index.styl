@@ -154,7 +154,8 @@ html body {
 .article-body th { background: #f6f8f3; font-weight: 600; }
 .article-body tr:nth-child(2n) { background: var(--blog-surface); }
 .article-body hr { border: 0; border-top: 1px solid var(--blog-line); margin: 28px 0; }
-.article-updated { color: var(--blog-muted); font-size: 11px; margin-top: 40px; }
+.article-updated { display: flex; flex-wrap: wrap; gap: 12px; color: var(--blog-muted); font-size: 11px; margin-top: 40px; }
+.article-updated a { margin-left: auto; color: var(--blog-accent); }
 .article-pagination { display: flex; justify-content: space-between; gap: 24px; border-top: 1px solid var(--blog-line); margin-top: 24px; padding-top: 24px; font-size: 13px; }
 .article-pagination > div { flex: 1; min-width: 0; }
 .article-pagination > div:last-child { text-align: right; }

@@ -8,7 +8,7 @@
       <div class="article-tags"><router-link v-for="tag in tags" :key="tag" :to="tagPath(tag)">{{ tag }}</router-link></div>
     </header>
     <Content class="article-body theme-reco-content custom" />
-    <p v-if="$page.lastUpdated" class="article-updated">最近更新 · {{ $page.lastUpdated }}</p>
+    <p class="article-updated"><span v-if="$page.lastUpdated">最近更新 · {{ $page.lastUpdated }}</span><a href="#main">回到文章开头 ↑</a></p>
     <nav v-if="previous || next" class="article-pagination" aria-label="上一篇和下一篇">
       <div><template v-if="previous"><small>← 上一篇</small><router-link :to="previous.path">{{ previous.title }}</router-link></template></div>
       <div><template v-if="next"><small>下一篇 →</small><router-link :to="next.path">{{ next.title }}</router-link></template></div>
