@@ -5,8 +5,12 @@
       <div class="article-meta"><span class="content-type">学习笔记</span><time :datetime="dateText($page.frontmatter.date)">发布于 {{ dateText($page.frontmatter.date) }}</time></div>
       <h1>{{ $page.title }}</h1>
       <p v-if="$page.frontmatter.description" class="description">{{ $page.frontmatter.description }}</p>
-      <div class="article-tags"><router-link v-for="tag in tags" :key="tag" :to="tagPath(tag)">{{ tag }}</router-link></div>
+      <div class="article-tags"><router-link v-for="tag in tags" :key="tag" :to="tagPath(tag)">{{ categoryName(tag) }}</router-link></div>
     </header>
+    <nav v-if="chapters.length" class="reading-guide" aria-label="分章阅读">
+      <p>分章阅读</p>
+      <ol><li v-for="chapter in chapters" :key="chapter.slug"><router-link :to="{ path: $page.path, hash: '#' + chapter.slug }">{{ chapter.title }}</router-link></li></ol>
+    </nav>
     <Content class="article-body theme-reco-content custom" />
     <p class="article-updated"><span v-if="$page.lastUpdated">最近更新 · {{ $page.lastUpdated }}</span><a href="#main">回到文章开头 ↑</a></p>
     <nav v-if="previous || next" class="article-pagination" aria-label="上一篇和下一篇">
@@ -17,7 +21,7 @@
 </template>
 
 <script>
-import { values, categoryName, dateText } from '../../lib/posts'
+import { values, categoryName, dateText, categoryPosts } from '../../lib/posts'
 import { mountCodeCopy } from '../../lib/code-copy'
 export default {
   props: { posts: Array },
@@ -28,7 +32,8 @@ export default {
     category() { return values(this.$page.frontmatter.categories)[0] || '' },
     categoryPath() { const item = this.$categories.list.find(item => item.name === this.category); return item ? item.path : '/' },
     tags() { return values(this.$page.frontmatter.tags).slice(0, 2) },
-    siblings() { return this.posts.filter(post => values(post.frontmatter.categories).includes(this.category)).slice().sort((a, b) => a.path.localeCompare(b.path, 'en', { numeric: true })) },
+    chapters() { return (this.$page.frontmatter.readingGuide || []).filter(chapter => (this.$page.headers || []).some(header => header.slug === chapter.slug)) },
+    siblings() { return categoryPosts(this.posts, this.category) },
     currentIndex() { return this.siblings.findIndex(post => post.path === this.$page.path) },
     previous() { return this.siblings[this.currentIndex - 1] },
     next() { return this.siblings[this.currentIndex + 1] }

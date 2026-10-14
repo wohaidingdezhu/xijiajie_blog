@@ -17,13 +17,15 @@
               <h1>{{ title }}</h1>
               <p class="description">{{ description }}</p>
             </div>
-            <p class="collection-count"><strong>{{ filtered.length }}</strong><span>篇文章</span></p>
+            <p v-if="!searchLoading" class="collection-count"><strong>{{ filtered.length }}</strong><span>篇文章</span></p>
           </header>
           <div v-if="query || tag" class="filter-status">
-            <span>{{ query ? '搜索：' + query : '标签：' + tag }}</span>
+            <span>{{ query ? '搜索：' + query : '标签：' + categoryName(tag) }}</span>
             <router-link :to="clearFilterPath">清除筛选</router-link>
           </div>
-          <div v-if="!filtered.length" class="empty-state">
+          <p v-if="query && searchFailed" class="search-status" role="status">正文搜索暂时未加载，当前仅搜索标题与摘要。<button type="button" @click="ensureSearchIndex">重试</button></p>
+          <p v-if="query && searchLoading" class="search-status" role="status">正在搜索正文…</p>
+          <div v-else-if="!filtered.length" class="empty-state">
             <h2>没有找到相关文章</h2><p>试试更短的关键词，或浏览全部文章。</p>
             <router-link to="/">查看全部文章 →</router-link>
           </div>
@@ -36,7 +38,7 @@
               </router-link>
             </section>
           </div>
-          <ArticleList v-else :posts="filtered" />
+          <ArticleList v-else :posts="filtered" :query="query" :search-index="searchIndex || {}" />
         </template>
         <section v-else-if="$page.path" class="standalone-page">
           <h1>{{ $page.title }}</h1><Content class="article-body custom" />
@@ -47,7 +49,7 @@
         </section>
         <footer class="blog-footer"><span>xijiajie · 记录与分享</span><a :href="$themeConfig.libraryUrl">前端资料库 ↗</a></footer>
       </main>
-      <ArticleToc v-if="isArticle" :key="$page.path" :headers="$page.headers || []" />
+      <ArticleToc v-if="isArticle" :key="$page.path" :headers="tocHeaders" />
     </div>
   </div>
 </template>
@@ -59,10 +61,11 @@ import ArticleList from './blog/ArticleList.vue'
 import ArticlePage from './blog/ArticlePage.vue'
 import ArticleToc from './blog/ArticleToc.vue'
 import { getPosts, filterPosts, archivePosts, values, categoryName, dateText } from '../lib/posts'
+import { loadSearchIndex } from '../lib/load-search'
 
 export default {
   components: { BlogHeader, BlogSidebar, ArticleList, ArticlePage, ArticleToc },
-  data: () => ({ menuOpen: false }),
+  data: () => ({ menuOpen: false, searchIndex: null, searchLoading: false, searchFailed: false, clientReady: false }),
   computed: {
     posts() { return getPosts(this.$site.pages) },
     isArticle() { return this.$page.path && this.$page.path.startsWith('/blogs/') && !!this.$page.frontmatter.date },
@@ -72,18 +75,21 @@ export default {
       return this.$route.meta.pid === 'categories' && this.$currentCategories ? this.$currentCategories.key || '' : ''
     },
     tag() { return this.$route.meta.pid === 'tags' && this.$currentTags ? this.$currentTags.key || '' : '' },
-    query() { return typeof this.$route.query.q === 'string' ? this.$route.query.q.trim() : '' },
+    // 静态 HTML 不包含 URL 查询，首轮渲染先与构建产物一致，再读取搜索参数。
+    query() { return this.clientReady && typeof this.$route.query.q === 'string' ? this.$route.query.q.trim() : '' },
     clearFilterPath() { return this.query ? this.$route.path.replace(/page\/\d+\/$/, '') : '/' },
     isCollection() {
       return this.$page.path && (this.$page.frontmatter.home || this.isArchive ||
         this.$route.path.startsWith('/categories/') || this.$route.path.startsWith('/tag/'))
     },
-    title() { return this.isArchive ? '文章归档' : this.category ? categoryName(this.category) : this.tag ? this.tag : this.query ? '搜索文章' : '文章与笔记' },
+    title() { return this.isArchive ? '文章归档' : this.category ? categoryName(this.category) : this.tag ? categoryName(this.tag) : this.query ? '搜索文章' : '文章与笔记' },
     description() { return this.isArchive ? '按时间回看，记录每一步积累。' : this.category ? '关于' + categoryName(this.category) + '的学习笔记与实践记录。' : '记录前端开发、工程实践与日常学习。' },
-    filtered() { return filterPosts(this.posts, { category: this.category, tag: this.tag, query: this.query }) },
+    filtered() { return filterPosts(this.posts, { category: this.category, tag: this.tag, query: this.query }, this.searchIndex || {}) },
+    tocHeaders() { return (this.$page.headers || []).filter(header => header.level <= (this.$page.frontmatter.tocDepth || 3)) },
     archive() { return archivePosts(this.filtered) }
   },
   watch: {
+    query() { if (this.clientReady) this.ensureSearchIndex() },
     '$route.fullPath'() {
       this.menuOpen = false
       this.$nextTick(() => { if (!this.$route.hash) this.$refs.main.focus({ preventScroll: true }) })
@@ -94,6 +100,8 @@ export default {
     }
   },
   mounted() {
+    this.clientReady = true
+    this.ensureSearchIndex()
     document.documentElement.classList.remove('dark')
     document.documentElement.classList.add('light')
     this.menuMedia = window.matchMedia('(max-width: 760px)')
@@ -104,7 +112,20 @@ export default {
     this.menuMedia.removeListener(this.onMenuBreakpoint)
   },
   methods: {
-    dateText,
+    dateText, categoryName,
+    async ensureSearchIndex() {
+      if (!this.query || this.searchIndex || this.searchLoading) return
+      this.searchLoading = true
+      this.searchFailed = false
+      try {
+        const index = await loadSearchIndex()
+        if (!this._isDestroyed) this.searchIndex = index
+      } catch (_) {
+        if (!this._isDestroyed) this.searchFailed = true
+      } finally {
+        if (!this._isDestroyed) this.searchLoading = false
+      }
+    },
     onMenuBreakpoint(event) {
       if (!event.matches && this.menuOpen) {
         this.menuOpen = false

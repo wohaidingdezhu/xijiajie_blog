@@ -23,6 +23,15 @@ async function loadHeader(route) {
   const instance = { $route: route, $router: router, $refs: {}, $nextTick: () => Promise.resolve(), ...component.methods };
   Object.assign(instance, component.data.call(instance));
   Object.defineProperty(instance, 'searchPath', { get: () => component.computed.searchPath.call(instance) });
+  // 静态页面先以空查询完成挂载，再从 URL 恢复输入，模拟浏览器挂载阶段。
+  const previousWindow = globalThis.window;
+  globalThis.window = { addEventListener() {} };
+  try {
+    component.mounted.call(instance);
+  } finally {
+    if (previousWindow === undefined) delete globalThis.window;
+    else globalThis.window = previousWindow;
+  }
   return { instance, targets };
 }
 

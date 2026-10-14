@@ -22,7 +22,7 @@
 <script>
 export default {
   props: { menuOpen: Boolean },
-  data() { return { query: typeof this.$route.query.q === 'string' ? this.$route.query.q : '' } },
+  data() { return { query: '' } },
   computed: {
     searchPath() {
       const path = this.$route.path
@@ -31,7 +31,10 @@ export default {
     }
   },
   watch: { '$route.query.q'(query) { this.query = typeof query === 'string' ? query : '' } },
-  mounted() { window.addEventListener('keydown', this.onShortcut) },
+  mounted() {
+    this.query = typeof this.$route.query.q === 'string' ? this.$route.query.q : ''
+    window.addEventListener('keydown', this.onShortcut)
+  },
   beforeDestroy() { window.removeEventListener('keydown', this.onShortcut) },
   methods: {
     async clearSearch() {

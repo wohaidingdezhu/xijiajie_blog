@@ -20,17 +20,17 @@
 </template>
 
 <script>
-import { values, categoryName } from '../../lib/posts'
+import { values, categoryName, sortCategories, categoryPosts } from '../../lib/posts'
 export default {
   props: { open: Boolean, posts: Array, category: String },
   computed: {
     categories() {
-      return (this.$categories.list || []).map(item => ({
+      return sortCategories((this.$categories.list || []).map(item => ({
         name: item.name, path: item.path,
         count: this.posts.filter(post => values(post.frontmatter.categories).includes(item.name)).length
-      })).filter(item => item.count)
+      })).filter(item => item.count))
     },
-    related() { return this.$page.path && this.$page.path.startsWith('/blogs/') ? this.posts.filter(post => values(post.frontmatter.categories).includes(this.category)) : [] }
+    related() { return this.$page.path && this.$page.path.startsWith('/blogs/') ? categoryPosts(this.posts, this.category) : [] }
   },
   methods: {
     categoryName,

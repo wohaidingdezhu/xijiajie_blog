@@ -1,5 +1,6 @@
 const sidebar = require("./siderbar.js");
 const otherPlugins = require('./otherPlugins');
+const blogOrigin = 'https://wohaidingdezhu.github.io/';
 module.exports = {
     title: "xijiajie博客",
     description: "记录前端开发、工程实践与日常学习。",
@@ -8,6 +9,7 @@ module.exports = {
     },
     dest: "public",
     base: "/",
+    shouldPrefetch: () => false,
     port: "9999",
     patterns: ["**/*.md", "**/*.vue", "!CONTRIBUTING.md"],
     head: [
@@ -29,7 +31,7 @@ module.exports = {
             },
         ],
     ],
-    plugins: otherPlugins,
+    plugins: [...otherPlugins, [require('./plugins/blog-content'), { origin: blogOrigin }]],
     theme: "reco",
     chainWebpack(config) {
         // 仅替换旧主题的目录组件，保留主题其他组件和样式。
@@ -41,6 +43,7 @@ module.exports = {
         config.resolve.alias.merge(aliases);
     },
     themeConfig: {
+        blogOrigin,
         mode: "light",
         modePicker: false,
         libraryUrl: "https://wohaidingdezhu.github.io/fe-interview/",
