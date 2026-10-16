@@ -66,3 +66,41 @@ test('大图压缩保留像素和原文件，并复用相同内容的构建缓�
   assert.equal(second.url, first.url);
   assert.equal((await fs.stat(file)).mtimeMs, original.mtimeMs);
 });
+
+test('开发服务器可访问压缩图片和分享封面，支持子路径且不暴露其他缓存文件', async t => {
+  const root = await fs.mkdtemp(path.join(os.tmpdir(), 'blog-dev-images-'));
+  t.after(() => fs.rm(root, { recursive: true, force: true }));
+  const publicDir = path.join(root, '.vuepress/public');
+  await fs.mkdir(publicDir, { recursive: true });
+  await sharp({ create: { width: 800, height: 400, channels: 4, background: '#26765e' } })
+    .png({ compressionLevel: 0 }).toFile(path.join(publicDir, 'diagram.png'));
+  const createPlugin = require('../.vuepress/plugins/blog-content');
+  const express = require('express');
+  for (const base of ['/', '/blog/']) {
+    const plugin = createPlugin({ origin: 'https://example.com/' }, {
+      sourceDir: root, base, pages: [{ _strippedContent: '![图片](/diagram.png)' }]
+    });
+    await plugin.ready();
+    const md = require('markdown-it')();
+    plugin.extendMarkdown(md);
+    const imageUrl = md.render('![图片](/diagram.png)').match(/src="([^"]+)"/)[1];
+    assert.ok(imageUrl.startsWith(base + 'assets/images/') && imageUrl.endsWith('.webp'));
+    const app = express();
+    plugin.beforeDevServer(app);
+    const server = app.listen(0, '127.0.0.1');
+    await new Promise(resolve => server.once('listening', resolve));
+    try {
+      const origin = 'http://127.0.0.1:' + server.address().port;
+      for (const [url, type] of [[imageUrl, 'image/webp'], [base + 'social-card.png', 'image/png']]) {
+        const response = await fetch(origin + url);
+        assert.equal(response.status, 200);
+        assert.equal(response.headers.get('content-type'), type);
+        const metadata = await sharp(Buffer.from(await response.arrayBuffer())).metadata();
+        assert.ok(metadata.width > 0 && metadata.height > 0);
+      }
+      assert.equal((await fetch(origin + base + 'assets/images/social-card.png')).status, 404);
+    } finally {
+      await new Promise(resolve => server.close(resolve));
+    }
+  }
+});

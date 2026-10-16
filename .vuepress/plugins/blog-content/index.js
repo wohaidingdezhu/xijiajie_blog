@@ -71,6 +71,13 @@ module.exports = (options, context) => {
       images = await prepareImages(context.pages, publicDir, cacheDir);
       await sharp(path.join(__dirname, 'social-card.svg')).png().toFile(path.join(cacheDir, 'social-card.png'));
     },
+    beforeDevServer(app) {
+      // 开发模式不执行 generated，直接提供已生成的缓存资源。
+      for (const image of Object.values(images)) {
+        if (image.output) app.get(context.base + image.url.slice(1), (req, res) => res.sendFile(image.output));
+      }
+      app.get(context.base + 'social-card.png', (req, res) => res.sendFile(path.join(cacheDir, 'social-card.png')));
+    },
     clientDynamicModules() {
       return { name: 'blog-search.js', content: 'export default ' + JSON.stringify(Object.fromEntries(getPosts(context.pages).map(page => [page.path, page._blogSearchBlocks || []]))) };
     },
