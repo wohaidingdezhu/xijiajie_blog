@@ -17,7 +17,7 @@
               <h1>{{ title }}</h1>
               <p class="description">{{ description }}</p>
             </div>
-            <p v-if="!searchLoading" class="collection-count"><strong>{{ filtered.length }}</strong><span>篇文章</span></p>
+            <p v-if="!query || !searchLoading" class="collection-count"><strong>{{ filtered.length }}</strong><span>篇文章</span></p>
           </header>
           <div v-if="query || tag" class="filter-status">
             <span>{{ query ? '搜索：' + query : '标签：' + categoryName(tag) }}</span>

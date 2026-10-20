@@ -104,10 +104,10 @@ html body {
 .article-row-meta time { margin-left: auto; }
 .blog-app .article-row h2 { font-size: 19px; font-weight: 600; color: #314a38; margin: 12px 0 8px; line-height: 1.6; }
 .article-row h2 a:hover { color: var(--blog-accent); }
-.article-row h2 span { display: inline-block; margin-left: 12px; color: #8fa58f; font-size: 14px; }
+.article-row h2 span[aria-hidden] { display: inline-block; margin-left: 12px; color: #8fa58f; font-size: 14px; }
 .blog-app .article-summary { color: var(--blog-muted); font-size: 13px; line-height: 1.8; margin: 0 0 14px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .blog-app .article-summary.search-snippet { white-space: normal; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; }
-.search-snippet mark { color: var(--blog-accent); background: var(--blog-selected); border-radius: 2px; padding: 0 2px; }
+.article-row mark { color: var(--blog-accent); background: var(--blog-selected); border-radius: 2px; padding: 0 2px; }
 .search-status { color: var(--blog-muted); font-size: 13px; margin: 24px 0; }
 .search-status button { margin-left: 8px; border: 0; background: transparent; color: var(--blog-accent); text-decoration: underline; }
 .article-tags { display: flex; flex-wrap: wrap; gap: 7px; }

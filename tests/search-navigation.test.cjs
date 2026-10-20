@@ -85,3 +85,61 @@ test('清除关键词保留分类或标签范围，单独清除标签则回到�
     assert.equal(component.computed.clearFilterPath.call(instance), '/');
   }
 });
+
+async function renderComponent(relative, options) {
+  const Vue = require('vue');
+  const { compileToFunctions, parseComponent } = require('vue-template-compiler');
+  const { createRenderer } = require('vue-server-renderer');
+  const component = await loadComponent(relative);
+  const source = fs.readFileSync(path.join(__dirname, '../.vuepress/components', relative), 'utf8');
+  const compiled = compileToFunctions(parseComponent(source).template.content);
+  const stub = { render: h => h('div') };
+  return createRenderer().renderToString(new Vue({
+    ...component,
+    ...compiled,
+    components: {
+      ...Object.fromEntries(Object.keys(component.components || {}).map(name => [name, stub])),
+      RouterLink: { render(h) { return h('a', this.$slots.default); } },
+    },
+    ...options,
+  }));
+}
+
+test('搜索标题高亮忽略大小写，特殊字符保持安全文本，清空后不再高亮', async () => {
+  const post = {
+    path: '/blogs/canvas.html', title: 'Canvas <img src=x> a.b',
+    frontmatter: { date: '2022-11-01', categories: ['Others'], tags: [] },
+  };
+  for (const query of ['canvas a.b', '']) {
+    const html = await renderComponent('blog/ArticleList.vue', {
+      propsData: { posts: [post], query },
+      beforeCreate() { this.$route = { path: '/', query: {} }; },
+    });
+    const title = html.match(/<h2>([\s\S]*?)<\/h2>/)[1];
+    assert.ok(title.includes('&lt;img src=x&gt;'));
+    assert.ok(!title.includes('<img'));
+    if (query) {
+      assert.ok(title.includes('<mark>Canvas</mark>'));
+      assert.ok(title.includes('<mark>a.b</mark>'));
+    } else {
+      assert.ok(!title.includes('<mark>'));
+    }
+  }
+});
+
+test('正文索引加载时隐藏未完整的计数，清空关键词立即恢复文章总数', async () => {
+  for (const q of ['canvas', '']) {
+    const html = await renderComponent('GlobalLayout.vue', {
+      data: () => ({ clientReady: true, menuOpen: false, searchIndex: null, searchLoading: true, searchFailed: false }),
+      beforeCreate() {
+        this.$route = { path: '/', query: { q }, meta: {} };
+        this.$page = { path: '/', frontmatter: { home: true } };
+        this.$site = { pages: [{ path: '/blogs/canvas.html', title: 'Canvas', frontmatter: { date: '2022-11-01' } }] };
+        this.$themeConfig = { libraryUrl: 'https://example.com/' };
+      },
+    });
+    assert.equal(html.includes('class="collection-count"'), !q);
+    assert.equal(html.includes('正在搜索正文'), !!q);
+    if (!q) assert.ok(html.includes('<strong>1</strong>'));
+  }
+});
