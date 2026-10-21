@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="list-summary"><span>共 {{ posts.length }} 篇文章</span><span>{{ query ? '按相关程度排序' : '按发布时间排序' }}</span></div>
+    <div class="list-summary" role="status" aria-atomic="true"><span>共 {{ posts.length }} 篇文章</span><span>{{ query ? '按相关程度排序' : '按发布时间排序' }}</span></div>
     <div class="article-list">
       <article v-for="post in pagination.items" :key="post.path" class="article-row">
         <div class="article-row-meta"><span>{{ categoryName(values(post.frontmatter.categories)[0]) }}</span><time :datetime="dateText(post.frontmatter.date)">{{ dateText(post.frontmatter.date) }}</time></div>
@@ -34,7 +34,10 @@ export default {
     values, categoryName, dateText, highlightText,
     snippet(post) { return highlightText(searchSnippet(post, this.query, this.searchIndex), this.query) },
     pageLink(page) { return { path: this.$route.path.replace(/page\/\d+\/$/, ''), query: { ...this.$route.query, page: String(page) } } },
-    tagPath(tag) { const item = this.$tags.list.find(item => item.name === tag); return item ? item.path : '/' }
+    tagPath(tag) {
+      const item = this.$tags.list.find(item => item.name === tag)
+      return { path: item ? item.path : '/', query: this.query ? { q: this.query } : {} }
+    }
   }
 }
 </script>

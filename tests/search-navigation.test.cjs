@@ -76,6 +76,21 @@ test('切换分类保留关键词并重置页码，无效查询不会进入新�
   }
 });
 
+test('搜索结果切换标签保留关键词并重置页码，普通浏览不附加搜索条件', async () => {
+  const component = await loadComponent('blog/ArticleList.vue');
+  const instance = {
+    $tags: { list: [{ name: 'JavaScript', path: '/tag/JavaScript/' }] },
+    $route: { query: { q: 'bind', page: '2' } },
+    query: 'bind',
+  };
+  assert.deepEqual(component.methods.tagPath.call(instance, 'JavaScript'), {
+    path: '/tag/JavaScript/', query: { q: 'bind' },
+  });
+  assert.deepEqual(component.methods.tagPath.call(instance, '不存在'), { path: '/', query: { q: 'bind' } });
+  instance.query = '';
+  assert.deepEqual(component.methods.tagPath.call(instance, 'JavaScript'), { path: '/tag/JavaScript/', query: {} });
+});
+
 test('清除关键词保留分类或标签范围，单独清除标签则回到全部文章', async () => {
   const component = await loadComponent('GlobalLayout.vue');
   for (const path of ['/categories/JavaScript/', '/tag/JavaScript/', '/tag/JavaScript/page/2/']) {

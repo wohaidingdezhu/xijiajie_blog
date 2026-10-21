@@ -25,7 +25,7 @@
           </div>
           <p v-if="query && searchFailed" class="search-status" role="status">正文搜索暂时未加载，当前仅搜索标题与摘要。<button type="button" @click="ensureSearchIndex">重试</button></p>
           <p v-if="query && searchLoading" class="search-status" role="status">正在搜索正文…</p>
-          <div v-else-if="!filtered.length" class="empty-state">
+          <div v-else-if="!filtered.length" class="empty-state" role="status">
             <h2>没有找到相关文章</h2><p>试试更短的关键词，或浏览全部文章。</p>
             <router-link to="/">查看全部文章 →</router-link>
           </div>
